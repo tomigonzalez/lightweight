@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       String    @id @default(cuid())
+  email    String    @unique
+  routines Routine[]
+  workouts Workout[]
+}
+
+model Routine {
+  id        String            @id @default(cuid())
+  name      String            // Ej: "Lunes - Pecho/Tríceps"
+  userId    String
+  user      User              @relation(fields: [userId], references: [id])
+  exercises RoutineExercise[] // Relación con los ejercicios elegidos
+}
+
+model Exercise {
+  id          String            @id @default(cuid())
+  name        String            @unique
+  muscleGroup String
+  routines    RoutineExercise[]
+  sets        Set[]
+}
+
+// Tabla para que cada rutina tenga sus ejercicios específicos
+model RoutineExercise {
+  id         String   @id @default(cuid())
+  routineId  String
+  exerciseId String
+  routine    Routine  @relation(fields: [routineId], references: [id])
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  order      Int?     // Para que el usuario decida qué ejercicio va primero
+}
+
+model Workout {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  sets      Set[]
+}
+
+model Set {
+  id         String   @id @default(cuid())
+  weight     Float
+  reps       Int
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  workoutId  String
+  workout    Workout  @relation(fields: [workoutId], references: [id])
+}
