@@ -11,38 +11,43 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
 model User {
-  id       String    @id @default(cuid())
-  email    String    @unique
-  routines Routine[]
-  workouts Workout[]
+  id        String     @id @default(cuid())
+  email     String     @unique
+  routines  Routine[]
+  workouts  Workout[]
+  exercises Exercise[] // Relación para los ejercicios personalizados que crea el usuario
 }
 
 model Routine {
   id        String            @id @default(cuid())
-  name      String            // Ej: "Lunes - Pecho/Tríceps"
+  name      String            // Ej: "Push Day", "Lunes"
   userId    String
   user      User              @relation(fields: [userId], references: [id])
-  exercises RoutineExercise[] // Relación con los ejercicios elegidos
+  exercises RoutineExercise[]
 }
 
 model Exercise {
   id          String            @id @default(cuid())
-  name        String            @unique
+  name        String            // Quitamos @unique para que varios usuarios tengan "Mi Ejercicio"
   muscleGroup String
+  
+  // LOGICA PARA PERSONALIZADOS
+  isCustom    Boolean           @default(false) 
+  userId      String?           // Si es null, es un ejercicio global de la app
+  user        User?             @relation(fields: [userId], references: [id])
+
   routines    RoutineExercise[]
   sets        Set[]
 }
 
-// Tabla para que cada rutina tenga sus ejercicios específicos
 model RoutineExercise {
   id         String   @id @default(cuid())
   routineId  String
   exerciseId String
   routine    Routine  @relation(fields: [routineId], references: [id])
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
-  order      Int?     // Para que el usuario decida qué ejercicio va primero
+  order      Int?     
 }
 
 model Workout {
@@ -61,4 +66,7 @@ model Set {
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   workoutId  String
   workout    Workout  @relation(fields: [workoutId], references: [id])
+  
+  // LOGICA PARA PROGRESO
+  createdAt  DateTime @default(now()) // Fundamental para saber cuál fue el último set cronológicamente
 }
