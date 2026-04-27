@@ -34,9 +34,12 @@ export default function Home() {
 
           {/* Botones apilados en móvil, uno al lado del otro en sm: */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-sm mx-auto sm:max-w-none">
-            <button className="w-full cursor-pointer sm:w-auto bg-yellow-400 text-black px-10 py-4 md:py-5 rounded-xl font-black uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-95 shadow-xl shadow-yellow-400/10">
+            <Link
+              href="/register"
+              className="w-full sm:w-auto bg-yellow-400 text-black px-10 py-4 md:py-5 rounded-xl font-black uppercase tracking-widest hover:bg-yellow-500 transition-all text-center"
+            >
               Crear mi cuenta
-            </button>
+            </Link>
             <button className="w-full cursor-pointer sm:w-auto bg-transparent border-2 border-zinc-800 text-white px-10 py-4 md:py-5 rounded-xl font-black uppercase tracking-widest hover:border-zinc-600 transition active:scale-95">
               Ver funciones
             </button>
@@ -45,7 +48,7 @@ export default function Home() {
       </main>
 
       {/* --- FEATURES PREVIEW --- */}
-      {/* En móvil se apilan, en tablet/pc se ponen en grilla */}
+
       <section className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-zinc-900">
         <FeatureItem
           num="01"
