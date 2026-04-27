@@ -52,7 +52,7 @@ export default function Home() {
       <section className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-zinc-900">
         <FeatureItem
           num="01"
-          title="REGISTRO VELOZ"
+          title="REGISTRO RAPIDO"
           desc="Cargá tus series en segundos entre descansos."
         />
         <FeatureItem
@@ -62,7 +62,7 @@ export default function Home() {
         />
         <FeatureItem
           num="03"
-          title="CUSTOMIZABLE"
+          title="A MEDIDA"
           desc="Tus propios ejercicios, tu propio ritmo."
         />
       </section>
