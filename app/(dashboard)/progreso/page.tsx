@@ -1,4 +1,4 @@
-import { FiTrendingUp, FiTarget, FiZap, FiActivity } from "react-icons/fi";
+import { FiZap } from "react-icons/fi";
 
 export default function ProgresoPage() {
   return (

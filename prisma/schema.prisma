@@ -16,27 +16,28 @@ model User {
   email     String     @unique
   routines  Routine[]
   workouts  Workout[]
-  exercises Exercise[] // Relación para los ejercicios personalizados que crea el usuario
+  exercises Exercise[]
+  
+  activePlanId String? // <-- Opcional: para saber qué "Semana" está usando
 }
 
 model Routine {
   id        String            @id @default(cuid())
-  name      String            // Ej: "Push Day", "Lunes"
+  name      String            // Ej: "Push Day"
+  dayOfWeek Int?              // <-- 0=Domingo, 1=Lunes... Para el Dashboard automático
   userId    String
   user      User              @relation(fields: [userId], references: [id])
   exercises RoutineExercise[]
+  workouts  Workout[]        
 }
 
 model Exercise {
   id          String            @id @default(cuid())
-  name        String            // Quitamos @unique para que varios usuarios tengan "Mi Ejercicio"
+  name        String            
   muscleGroup String
-  
-  // LOGICA PARA PERSONALIZADOS
   isCustom    Boolean           @default(false) 
-  userId      String?           // Si es null, es un ejercicio global de la app
+  userId      String?           
   user        User?             @relation(fields: [userId], references: [id])
-
   routines    RoutineExercise[]
   sets        Set[]
 }
@@ -48,6 +49,7 @@ model RoutineExercise {
   routine    Routine  @relation(fields: [routineId], references: [id])
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   order      Int?     
+  
 }
 
 model Workout {
@@ -55,6 +57,8 @@ model Workout {
   date      DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  routineId String?  // <-- Para saber que este entrenamiento fue el "Push Day"
+  routine   Routine? @relation(fields: [routineId], references: [id])
   sets      Set[]
 }
 
@@ -66,7 +70,5 @@ model Set {
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   workoutId  String
   workout    Workout  @relation(fields: [workoutId], references: [id])
-  
-  // LOGICA PARA PROGRESO
-  createdAt  DateTime @default(now()) // Fundamental para saber cuál fue el último set cronológicamente
+  createdAt  DateTime @default(now()) 
 }
