@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa"; // Si no tenés react-icons, podés usar un SVG
 import { FiArrowLeft } from "react-icons/fi";
+import { login } from "./actions";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ error?: string; message?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { error, message } = await searchParams;
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
       <div className="absolute top-8 left-6">
@@ -26,6 +32,16 @@ export default function LoginPage() {
             Preparate para otra sesión intensa
           </p>
         </div>
+        {error && (
+          <div className="p-4 bg-rose-950/40 border border-rose-500/50 rounded-xl text-rose-400 text-sm text-center font-bold tracking-wide">
+            ⚠️ {error}
+          </div>
+        )}
+        {message && (
+          <div className="p-4 bg-emerald-950/40 border border-emerald-500/50 rounded-xl text-emerald-400 text-sm text-center font-bold tracking-wide">
+            ✅ {message}
+          </div>
+        )}
 
         {/* Botón de Google */}
         <div className="space-y-4 mt-8">
@@ -36,21 +52,22 @@ export default function LoginPage() {
 
           {/* Divisor */}
           <div className="flex items-center gap-4 py-2">
-            <div className="h-[1px] bg-zinc-800 flex-1"></div>
+            <div className="h-px bg-zinc-800 flex-1"></div>
             <span className="text-zinc-600 text-xs font-bold uppercase">
               o con email
             </span>
-            <div className="h-[1px] bg-zinc-800 flex-1"></div>
+            <div className="h-px bg-zinc-800 flex-1"></div>
           </div>
         </div>
 
         {/* Formulario Tradicional */}
-        <form className="space-y-4">
+        <form action={login} className="space-y-4">
           <div>
             <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1">
               Email
             </label>
             <input
+              name="email"
               type="email"
               placeholder="tu@email.com"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-4 mt-1 focus:outline-none focus:border-yellow-400 transition text-sm"
@@ -62,13 +79,17 @@ export default function LoginPage() {
               Contraseña
             </label>
             <input
+              name="password"
               type="password"
               placeholder="••••••••"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-4 mt-1 focus:outline-none focus:border-yellow-400 transition text-sm"
             />
           </div>
 
-          <button className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-2">
+          <button
+            type="submit"
+            className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-2"
+          >
             Entrar al Rack
           </button>
         </form>

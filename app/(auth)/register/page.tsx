@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
+import { signup } from "./actions";
+
+interface RegisterPageProps {
+  searchParams: Promise<{ error?: string }>;
+}
 // app/(auth)/register/page.tsx
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: RegisterPageProps) {
+  // Esperamos si viene algún error desde la URL
+  const { error } = await searchParams;
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
       <div className="absolute top-8 left-6">
@@ -25,14 +34,20 @@ export default function RegisterPage() {
             Empezá a trackear tus ganancias hoy mismo.
           </p>
         </div>
-
+        {/* SI HAY UN ERROR, LO MOSTRAMOS ACÁ */}
+        {error && (
+          <div className="p-4 bg-rose-950/40 border border-rose-500/50 rounded-xl text-rose-400 text-sm text-center font-bold tracking-wide">
+            ⚠️ {error}
+          </div>
+        )}
         {/* Formulario */}
-        <form className="mt-8 space-y-4">
+        <form className="mt-8 space-y-4" action={signup}>
           <div>
             <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">
               Nombre
             </label>
             <input
+              name="name"
               type="text"
               placeholder="Tomás González"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-4 mt-1 focus:outline-none focus:border-yellow-400 transition"
@@ -44,6 +59,7 @@ export default function RegisterPage() {
               Email
             </label>
             <input
+              name="email"
               type="email"
               placeholder="tu@email.com"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-4 mt-1 focus:outline-none focus:border-yellow-400 transition"
@@ -55,13 +71,17 @@ export default function RegisterPage() {
               Password
             </label>
             <input
+              name="password"
               type="password"
               placeholder="••••••••"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-4 mt-1 focus:outline-none focus:border-yellow-400 transition"
             />
           </div>
 
-          <button className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-4">
+          <button
+            type="submit"
+            className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-4"
+          >
             Crear Cuenta
           </button>
         </form>
