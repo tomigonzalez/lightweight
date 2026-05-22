@@ -1,3 +1,5 @@
+import { getCurrentUserProfile } from "@/app/services/userQueries";
+import { redirect } from "next/navigation";
 import {
   FiActivity,
   FiAward,
@@ -5,7 +7,18 @@ import {
   FiTrendingUp,
 } from "react-icons/fi";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  // 1. Llamamos al helper en una sola línea limpia
+  const profile = await getCurrentUserProfile();
+
+  // 2. Si no hay perfil (no está logueado), rebote automático
+  if (!profile) {
+    redirect("/login");
+  }
+
+  // 3. Usamos el nombre real de la BD con un fallback seguro por las dudas
+  const nombreUsuario =
+    profile.name?.toUpperCase() || profile.email.split("@")[0].toUpperCase();
   // Estos datos luego vendrán de tu DB
   const hoy = "Lunes";
   const rutinaHoy = "Push Day";
@@ -18,7 +31,7 @@ export default function DashboardPage() {
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl md:text-4xl font-black italic tracking-tighter uppercase leading-none">
-            HOLA, <span className="text-yellow-400">TOMÁS</span>
+            HOLA, <span className="text-yellow-400">{nombreUsuario}</span>
           </h1>
           <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-2">
             Hoy es {hoy}, ¿listo para la sobrecarga?
@@ -135,6 +148,7 @@ function StatCard({
   label,
   value,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: string;
