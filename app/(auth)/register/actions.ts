@@ -37,7 +37,7 @@ export async function signup(formData: FormData) {
     .insert({
       id: authData.user.id, // Vinculamos el ID para que coincidan
       email: authData.user.email,
-      name: name,
+      name: name,   
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     })
