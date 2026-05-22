@@ -34,7 +34,7 @@ export default async function RegisterPage({
             Empezá a trackear tus ganancias hoy mismo.
           </p>
         </div>
-        {/* SI HAY UN ERROR, LO MOSTRAMOS ACÁ */}
+
         {error && (
           <div className="p-4 bg-rose-950/40 border border-rose-500/50 rounded-xl text-rose-400 text-sm text-center font-bold tracking-wide">
             ⚠️ {error}
