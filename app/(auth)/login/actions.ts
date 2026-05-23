@@ -28,3 +28,18 @@ export async function login(formData: FormData) {
   // ¡LOGIN EXITOSO! Lo mandamos directo al Dashboard (el Rack de entrenamiento)
   return redirect('/dashboard')
 }
+
+
+export async function signout() {
+  const supabase = await createClient()
+
+  // 1. Le avisa a Supabase Auth que rompa la sesión en las cookies
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.error('Error al cerrar sesión:', error.message)
+  }
+
+  // 2. Te echa al login con la sesión totalmente limpia
+  return redirect('/login')
+}

@@ -1,4 +1,11 @@
-import { FiHome, FiList, FiTrendingUp, FiSettings } from "react-icons/fi";
+import {
+  FiHome,
+  FiList,
+  FiTrendingUp,
+  FiSettings,
+  FiLogOut,
+} from "react-icons/fi";
+import { signout } from "@/app/(auth)/login/actions";
 import Link from "next/link";
 
 export default function DashboardLayout({
@@ -23,6 +30,18 @@ export default function DashboardLayout({
           />
           <SidebarItem href="/ajustes" icon={<FiSettings />} label="Ajustes" />
         </nav>
+
+        <form action={signout}>
+          <button
+            type="submit"
+            className="w-full cursor-pointer flex items-center gap-4 px-4 py-3 rounded-xl font-bold uppercase italic tracking-widest text-red-500 hover:text-white hover:bg-red-950/30 transition-all text-left"
+          >
+            <span className="text-xl">
+              <FiLogOut />
+            </span>
+            <span className="text-xs">Cerrar Sesión</span>
+          </button>
+        </form>
       </aside>
 
       {/* CONTENIDO DINÁMICO */}
@@ -46,6 +65,14 @@ export default function DashboardLayout({
         <Link href="/ajustes" className="text-2xl text-zinc-600">
           <FiSettings />
         </Link>
+        <form action={signout} className="flex items-center">
+          <button
+            type="submit"
+            className="text-2xl text-red-500 hover:text-red-400 cursor-pointer"
+          >
+            <FiLogOut />
+          </button>
+        </form>
       </nav>
     </div>
   );
