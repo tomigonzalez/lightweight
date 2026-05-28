@@ -1,3 +1,4 @@
+// app/(dashboard)/rutinas/nueva/page.tsx
 import { FiSave, FiPlus, FiTrash2, FiClock, FiCalendar } from "react-icons/fi";
 
 export default function NuevaPlanificacionSemanal() {
