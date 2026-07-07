@@ -33,6 +33,8 @@ model Routine {
   workouts  Workout[]         
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
+
+  @@unique([userId, dayOfWeek])
 }
 
 model Exercise {
@@ -69,11 +71,16 @@ model Workout {
 
 model Set {
   id         String   @id @default(cuid())
+  setNumber  Int
   weight     Float
   reps       Int
+  isWarmup   Boolean  @default(false)
+
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
   workoutId  String
   workout    Workout  @relation(fields: [workoutId], references: [id])
-  createdAt  DateTime @default(now()) 
+
+  createdAt  DateTime @default(now())
 }

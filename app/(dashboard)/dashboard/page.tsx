@@ -1,3 +1,5 @@
+// app/(dashboard)/dashboard/page.tsx
+import { getTodayRoutine } from "@/app/services/routineQueries";
 import { getCurrentUserProfile } from "@/app/services/userQueries";
 import { redirect } from "next/navigation";
 import {
@@ -6,11 +8,14 @@ import {
   FiArrowRight,
   FiTrendingUp,
 } from "react-icons/fi";
+import StartWorkoutButton from "./StartWorkoutButton";
 
 export default async function DashboardPage() {
   // 1. Llamamos al helper en una sola línea limpia
   const profile = await getCurrentUserProfile();
 
+  // 1/2. Llamamos al helper en una sola línea limpia
+  const rutinaHoy = await getTodayRoutine();
   // 2. Si no hay perfil (no está logueado), rebote automático
   if (!profile) {
     redirect("/login");
@@ -19,12 +24,22 @@ export default async function DashboardPage() {
   // 3. Usamos el nombre real de la BD con un fallback seguro por las dudas
   const nombreUsuario =
     profile.name?.toUpperCase() || profile.email.split("@")[0].toUpperCase();
-  // Estos datos luego vendrán de tu DB
-  const hoy = "Lunes";
-  const rutinaHoy = "Push Day";
-  const ultimaCargaTotal = "42,500 kg";
-  const porcentajeMejora = "+5.2%";
 
+  // Estos datos luego vendrán de tu DB
+  const NOMBRES_DIAS = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
+
+  const hoy = NOMBRES_DIAS[new Date().getDay()];
+  const cantidadEjercicios = rutinaHoy?.exercises?.length ?? 0;
+  const porcentajeMejora = "+5.2%";
+  const nombreRutina = rutinaHoy?.name ?? "Descanso";
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* 1. Header de Bienvenida */}
@@ -52,7 +67,7 @@ export default async function DashboardPage() {
                 Sugerencia para hoy ({hoy})
               </span>
               <h2 className="text-4xl font-black italic uppercase leading-none mb-2">
-                {rutinaHoy}
+                {nombreRutina}
               </h2>
 
               {/* COMPARATIVA DE "SOBREESCRITURA" VISUAL */}
@@ -61,22 +76,28 @@ export default async function DashboardPage() {
                   Última vez
                 </div>
                 <div className="text-white font-black italic text-sm">
-                  {ultimaCargaTotal}
+                  {cantidadEjercicios} ejercicios
                 </div>
                 <div className="text-green-500 font-black text-[10px] flex items-center gap-1">
                   <FiTrendingUp /> {porcentajeMejora}
                 </div>
               </div>
 
-              <button className="bg-yellow-400 text-black font-black px-8 py-4 rounded-2xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] shadow-lg shadow-yellow-400/10 flex items-center gap-2 group/btn">
-                EMPEZAR AHORA{" "}
-                <FiArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+              {rutinaHoy ? (
+                <StartWorkoutButton routineId={rutinaHoy.id} />
+              ) : (
+                <button
+                  disabled
+                  className="bg-zinc-800 text-zinc-500 font-black px-8 py-4 rounded-2xl uppercase tracking-widest cursor-not-allowed"
+                >
+                  HOY ES DESCANSO
+                </button>
+              )}
             </div>
 
             {/* Decoración de fondo */}
             <div className="absolute -right-2.5 -bottom-5 text-9xl font-black italic text-white/3 pointer-events-none group-hover:text-yellow-400/[0.07] transition-colors uppercase">
-              {rutinaHoy.split(" ")[0]}
+              {nombreRutina.split(" ")[0]}
             </div>
           </section>
 
