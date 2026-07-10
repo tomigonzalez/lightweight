@@ -16,7 +16,6 @@ export async function startWorkoutAction(routineId: string) {
   const { data: workout, error } = await supabase
     .from("Workout")
     .insert({
-      id: crypto.randomUUID(),
       userId: user.id,
       routineId,
       date: new Date().toISOString(),
