@@ -3,6 +3,8 @@
 import { WorkoutComplete } from "@/app/types/workout";
 import ExerciseCard from "./ExerciseCard/ExerciseCard";
 import { useState } from "react";
+import { saveWorkoutAction } from "@/app/(dashboard)/rutinas/workout/actions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   workout: WorkoutComplete;
@@ -20,6 +22,7 @@ interface ExerciseWorkoutState {
 }
 
 export default function WorkoutForm({ workout }: Props) {
+  const router = useRouter();
   const [exerciseData, setExerciseData] = useState<ExerciseWorkoutState[]>(() =>
     workout.routine.exercises.map((item) => ({
       exerciseId: item.exercise.id,
@@ -36,6 +39,7 @@ export default function WorkoutForm({ workout }: Props) {
       ],
     })),
   );
+
   const actualizarSet = (
     exerciseId: string,
     index: number,
@@ -98,6 +102,23 @@ export default function WorkoutForm({ workout }: Props) {
       ),
     );
   };
+
+  const guardarEntrenamiento = async () => {
+    const data = exerciseData.map((exercise) => ({
+      exerciseId: exercise.exerciseId,
+      sets: exercise.sets
+        .filter((set) => set.weight !== "" && set.reps !== "")
+        .map((set) => ({
+          setNumber: set.setNumber,
+          weight: Number(set.weight),
+          reps: Number(set.reps),
+        })),
+    }));
+
+    await saveWorkoutAction(workout.id, data);
+
+    router.push("/dashboard");
+  };
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <header>
@@ -136,6 +157,14 @@ export default function WorkoutForm({ workout }: Props) {
             />
           </div>
         ))}
+      </div>
+      <div className="pt-8">
+        <button
+          onClick={guardarEntrenamiento}
+          className="w-full bg-yellow-400 text-black rounded-2xl py-5 font-black uppercase hover:bg-yellow-500 transition"
+        >
+          Finalizar entrenamiento
+        </button>
       </div>
     </div>
   );
