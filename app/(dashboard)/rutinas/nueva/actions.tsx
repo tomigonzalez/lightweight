@@ -41,8 +41,6 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
 
     const diasKeys = Object.keys(plan).map(Number);
 
-    console.log("PLAN:", plan);
-
     // Crear nuevas
     // Crear / actualizar rutinas
     for (const dayOfWeek of diasKeys) {
@@ -103,18 +101,20 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
 
         if (error) throw error;
       } else {
-        // Si no existe, crear
-        rutinaId = crypto.randomUUID();
-
-        const { error } = await supabase.from("Routine").insert({
-          id: rutinaId,
-          name: nombreCompleto,
-          dayOfWeek,
-          userId: user.id,
-          updatedAt: new Date().toISOString(),
-        });
+        // SI NO EXISTE: Dejamos que la BD genere el ID, pero lo pedimos de vuelta con .select()
+        const { data: nuevaRutina, error } = await supabase
+          .from("Routine")
+          .insert({
+            name: nombreDia,
+            dayOfWeek,
+            userId: user.id,
+            updatedAt: new Date().toISOString(),
+          })
+          .select("id")
+          .single();
 
         if (error) throw error;
+        rutinaId = nuevaRutina.id;
       }
 
       // Eliminar ejercicios anteriores
@@ -130,7 +130,6 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
       // Insertar ejercicios nuevos
       if (dia.exercises.length > 0) {
         const relaciones = dia.exercises.map((ex, index) => ({
-          id: crypto.randomUUID(),
           routineId: rutinaId,
           exerciseId: ex.id,
           order: index + 1,
