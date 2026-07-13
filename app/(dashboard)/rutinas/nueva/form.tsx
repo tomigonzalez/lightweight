@@ -154,7 +154,7 @@ export default function PlanSemanalForm({
     <div className="max-w-4xl mx-auto space-y-10 pb-20">
       {/* 1. Header con Guardado Global */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
+        <div className="">
           <h1 className="text-3xl font-black italic uppercase tracking-tighter">
             MI <span className="text-yellow-400">RUTINA SEMANAL</span>
           </h1>
@@ -172,8 +172,8 @@ export default function PlanSemanalForm({
       </header>
 
       {/* 3. El Core: Lista de Días */}
-      <div className="space-y-6">
-        <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+      <div className="space-y-6 ">
+        <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2 ">
           <FiCalendar className="text-yellow-400" /> Distribución por días
         </h3>
 

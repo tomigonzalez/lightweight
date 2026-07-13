@@ -9,24 +9,23 @@ import {
   FiTrendingUp,
 } from "react-icons/fi";
 import StartWorkoutButton from "./StartWorkoutButton";
+import { getDashboardData } from "@/app/services/dashboardQueries";
 
 export default async function DashboardPage() {
   // 1. Llamamos al helper en una sola línea limpia
   const profile = await getCurrentUserProfile();
 
-  // 1/2. Llamamos al helper en una sola línea limpia
-  const rutinaHoy = await getTodayRoutine();
   // 2. Si no hay perfil (no está logueado), rebote automático
   if (!profile) {
     redirect("/login");
   }
-
+  const infoDashboard = await getDashboardData(profile.id);
+  console.log(infoDashboard);
   // 3. Usamos el nombre real de la BD con un fallback seguro por las dudas
   const nombreUsuario =
     profile.name?.toUpperCase() || profile.email.split("@")[0].toUpperCase();
 
-  // Estos datos luego vendrán de tu DB
-  const NOMBRES_DIAS = [
+  const DAYS = [
     "Domingo",
     "Lunes",
     "Martes",
@@ -36,10 +35,12 @@ export default async function DashboardPage() {
     "Sábado",
   ];
 
-  const hoy = NOMBRES_DIAS[new Date().getDay()];
-  const cantidadEjercicios = rutinaHoy?.exercises?.length ?? 0;
+  const hoy = DAYS[new Date().getDay()];
   const porcentajeMejora = "+5.2%";
-  const nombreRutina = rutinaHoy?.name ?? "Descanso";
+  const cantidadEjercicios = infoDashboard.todayRoutine?.exercises?.length ?? 0;
+
+  const nombreRutina = infoDashboard.todayRoutine?.name ?? "Descanso";
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* 1. Header de Bienvenida */}
@@ -78,13 +79,10 @@ export default async function DashboardPage() {
                 <div className="text-white font-black italic text-sm">
                   {cantidadEjercicios} ejercicios
                 </div>
-                <div className="text-green-500 font-black text-[10px] flex items-center gap-1">
-                  <FiTrendingUp /> {porcentajeMejora}
-                </div>
               </div>
 
-              {rutinaHoy ? (
-                <StartWorkoutButton routineId={rutinaHoy.id} />
+              {infoDashboard.todayRoutine ? (
+                <StartWorkoutButton routineId={infoDashboard.todayRoutine.id} />
               ) : (
                 <button
                   disabled
@@ -112,19 +110,15 @@ export default async function DashboardPage() {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                "Lunes: Push",
-                "Martes: Pull",
-                "Jueves: Legs",
-                "Viernes: Upper",
-              ].map((rutina) => (
+              {infoDashboard.weeklyRoutines.map((routine) => (
                 <div
-                  key={rutina}
+                  key={routine.id}
                   className="bg-zinc-900/40 hover:bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all cursor-pointer group"
                 >
                   <span className="font-bold uppercase italic text-sm group-hover:text-yellow-400 transition-colors">
-                    {rutina}
+                    {DAYS[routine.dayOfWeek]}: {routine.name}
                   </span>
+
                   <FiArrowRight className="text-zinc-700 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
                 </div>
               ))}
@@ -141,10 +135,29 @@ export default async function DashboardPage() {
             <StatCard
               icon={<FiActivity />}
               label="Racha Actual"
-              value="4 DÍAS"
+              value={`${infoDashboard.streak} DÍAS`}
             />
-            <StatCard icon={<FiAward />} label="PR Sentadilla" value="120 KG" />
+            <StatCard
+              icon={<FiAward />}
+              label="Entrenamientos Mes"
+              value={`${infoDashboard.workoutsThisMonth}`}
+            />
+            {infoDashboard.lastWorkout && (
+              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">
+                  Último entrenamiento
+                </p>
 
+                <p className="text-xl font-black italic uppercase mt-2">
+                  {infoDashboard.lastWorkout.routine?.name ?? "Rutina"}
+                </p>
+
+                <p className="text-zinc-400 text-sm mt-2">
+                  Volumen total: {Math.round(infoDashboard.lastWorkoutVolume)}{" "}
+                  kg
+                </p>
+              </div>
+            )}
             {/* Widget de Próximo Objetivo */}
             <div className="bg-yellow-400 p-6 rounded-3xl text-black">
               <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
