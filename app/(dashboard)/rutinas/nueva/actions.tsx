@@ -41,12 +41,11 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
 
     const diasKeys = Object.keys(plan).map(Number);
 
-    // Crear nuevas
-    // Crear / actualizar rutinas
+    // Crea / actualizar rutinas
     for (const dayOfWeek of diasKeys) {
       const dia = plan[dayOfWeek];
 
-      // Buscar si ya existe una rutina para ese día
+      // Busca si ya existe una rutina para ese día
       const { data: rutinaExistente, error: errorBusqueda } = await supabase
         .from("Routine")
         .select("id")
@@ -58,10 +57,10 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
         throw errorBusqueda;
       }
 
-      // Si el día es descanso, eliminar la rutina (si existe)
+      // Si el día es descanso, elimina la rutina (si existe)
       if (dia.isDescanso) {
         if (rutinaExistente) {
-          // Primero eliminar los ejercicios de la rutina
+          // Primero elimina los ejercicios de la rutina
           const { error: errorDeleteExercises } = await supabase
             .from("RoutineExercise")
             .delete()
@@ -69,7 +68,7 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
 
           if (errorDeleteExercises) throw errorDeleteExercises;
 
-          // Luego eliminar la rutina
+          // Luego elimina la rutina
           const { error: errorDeleteRoutine } = await supabase
             .from("Routine")
             .delete()
@@ -87,7 +86,7 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
 
       let rutinaId: string;
 
-      // Si existe, actualizar
+      // Si existe, actualiza
       if (rutinaExistente) {
         rutinaId = rutinaExistente.id;
 
@@ -117,7 +116,7 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
         rutinaId = nuevaRutina.id;
       }
 
-      // Eliminar ejercicios anteriores
+      // Elimina ejercicios anteriores
       const { error: errorDeleteExercises } = await supabase
         .from("RoutineExercise")
         .delete()
@@ -127,7 +126,7 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
         throw errorDeleteExercises;
       }
 
-      // Insertar ejercicios nuevos
+      // Inserta ejercicios nuevos
       if (dia.exercises.length > 0) {
         const relaciones = dia.exercises.map((ex, index) => ({
           routineId: rutinaId,

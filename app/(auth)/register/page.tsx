@@ -1,3 +1,4 @@
+// app/(auth)/register/page.tsx
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
 import { signup } from "./actions";
@@ -5,11 +6,10 @@ import { signup } from "./actions";
 interface RegisterPageProps {
   searchParams: Promise<{ error?: string }>;
 }
-// app/(auth)/register/page.tsx
 export default async function RegisterPage({
   searchParams,
 }: RegisterPageProps) {
-  // Esperamos si viene algún error desde la URL
+  // si viene algún error desde la URL
   const { error } = await searchParams;
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
@@ -25,7 +25,6 @@ export default async function RegisterPage({
         </Link>
       </div>
       <div className="w-full max-w-md space-y-8">
-        {/* Header del Form */}
         <div className="text-center">
           <h2 className="text-4xl font-black italic tracking-tighter uppercase">
             UNITE AL <span className="text-yellow-400">TEAM</span>
@@ -40,7 +39,7 @@ export default async function RegisterPage({
             ⚠️ {error}
           </div>
         )}
-        {/* Formulario */}
+
         <form className="mt-8 space-y-4" action={signup}>
           <div>
             <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">

@@ -5,9 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 export async function getDashboardData(userId: string) {
   const supabase = await createClient();
 
-  // ==========================
   // Rutina de hoy
-  // ==========================
   const today = new Date().getDay();
 
   const { data: todayRoutine } = await supabase
@@ -23,9 +21,7 @@ export async function getDashboardData(userId: string) {
     .eq("dayOfWeek", today)
     .maybeSingle();
 
-  // ==========================
   // Plan semanal
-  // ==========================
   const { data: weeklyRoutines } = await supabase
     .from("Routine")
     .select(`
@@ -36,9 +32,9 @@ export async function getDashboardData(userId: string) {
     .eq("userId", userId)
     .order("dayOfWeek");
 
-  // ==========================
+
   // Entrenamientos del mes
-  // ==========================
+
   const firstDayOfMonth = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
@@ -54,9 +50,8 @@ export async function getDashboardData(userId: string) {
     .eq("userId", userId)
     .gte("date", firstDayOfMonth.toISOString());
 
-  // ==========================
   // Último entrenamiento
-  // ==========================
+
   const { data: lastWorkout } = await supabase
     .from("Workout")
     .select(`
@@ -77,18 +72,16 @@ export async function getDashboardData(userId: string) {
     .limit(1)
     .maybeSingle();
 
-  // ==========================
+
   // Volumen último entrenamiento
-  // ==========================
   const lastWorkoutVolume =
     lastWorkout?.sets?.reduce(
       (acc: number, set: any) => acc + set.weight * set.reps,
       0,
     ) ?? 0;
 
-  // ==========================
+
   // Racha
-  // ==========================
   const { data: workouts } = await supabase
     .from("Workout")
     .select("date")

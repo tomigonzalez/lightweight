@@ -15,7 +15,6 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
-      {/* SIDEBAR (Desktop) */}
       <aside className="hidden md:flex md:w-64 lg:w-72 border-r border-zinc-900 flex-col p-6 sticky top-0 h-screen">
         <h2 className="text-xl font-black italic tracking-tighter uppercase mb-10">
           Lightweight <span className="text-yellow-400">Baby!</span>
@@ -44,14 +43,12 @@ export default function DashboardLayout({
         </form>
       </aside>
 
-      {/* CONTENIDO DINÁMICO */}
       <main className="flex-1 flex justify-center overflow-y-auto">
         <div className="w-full max-w-5xl px-6 py-10 pb-32 md:pb-10">
           {children}
         </div>
       </main>
 
-      {/* NAV INFERIOR (Móvil) */}
       <nav className="md:hidden fixed bottom-0 w-full bg-black/80 backdrop-blur-md border-t border-zinc-900 px-8 py-4 flex justify-between items-center z-50">
         <Link href="/dashboard" className="text-2xl text-zinc-600">
           <FiHome />
@@ -78,7 +75,6 @@ export default function DashboardLayout({
   );
 }
 
-// Componente pequeño para los links del sidebar
 function SidebarItem({
   href,
   icon,

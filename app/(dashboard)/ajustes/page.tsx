@@ -11,7 +11,6 @@ import {
 export default function AjustesPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
-      {/* HEADER */}
       <header>
         <h1 className="text-3xl font-black italic uppercase tracking-tighter">
           CONFIGURACIÓN DE <span className="text-yellow-400">SISTEMA</span>
@@ -21,7 +20,6 @@ export default function AjustesPage() {
         </p>
       </header>
 
-      {/* 1. SECCIÓN PERFIL */}
       <section className="space-y-4">
         <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
           <FiUser className="text-yellow-400" /> Cuenta de Usuario
@@ -49,7 +47,6 @@ export default function AjustesPage() {
         </div>
       </section>
 
-      {/* 2. PREFERENCIAS TÉCNICAS */}
       <section className="space-y-4">
         <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
           <FiSettings className="text-yellow-400" /> Preferencias de la App
@@ -86,7 +83,6 @@ export default function AjustesPage() {
         </div>
       </section>
 
-      {/* 3. SEGURIDAD Y ACCIÓN FINAL */}
       <section className="pt-6 border-t border-zinc-800 space-y-4">
         <button className="w-full flex items-center justify-between p-4 bg-zinc-900/30 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/50 rounded-2xl transition-all group">
           <div className="flex items-center gap-4">
@@ -102,7 +98,6 @@ export default function AjustesPage() {
   );
 }
 
-// Componente para items de ajustes
 function SettingsItem({ icon, label, desc, action }: any) {
   return (
     <div className="flex items-center justify-between p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:border-zinc-700 transition-colors">

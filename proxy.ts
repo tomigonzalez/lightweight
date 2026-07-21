@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
     request,
   })
 
-  // 1. Inicializamos el cliente de Supabase optimizado para Middleware
+  // Inicializa el cliente de Supabase
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -29,12 +29,12 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // 2. Le preguntamos a Supabase Auth si el usuario tiene una sesión activa
+  //pregunta a Supabases el usuario tiene una sesión activa
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
 
-  // 3. REBOTE INTRUSOS: Si no está logueado e intenta entrar a las pantallas del gimnasio
+  //Si no está logueado e intenta entrar a las pantallas del gimnasio
   const rutasProtegidas = ['/dashboard', '/rutinas', '/progreso', '/ajustes','/rutinas/nueva']
   const intentaEntrarAProtegida = rutasProtegidas.some(ruta => pathname.startsWith(ruta))
 
@@ -44,7 +44,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // 4. REBOTE LOGUEADOS: Si ya inició sesión e intenta volver al Login o Registro
+  // Si ya inició sesión e intenta volver al Login o Registro
   const rutasAuth = ['/login', '/register']
   const intentaEntrarAAuth = rutasAuth.some(ruta => pathname.startsWith(ruta))
 
@@ -57,7 +57,7 @@ export async function proxy(request: NextRequest) {
   return supabaseResponse
 }
 
-// 5. FILTRO DE PETICIONES: Evita que el middleware corra al cargar fotos, estilos o iconos
+//  Evita que el middleware corra al cargar fotos, estilos o iconos
 export const config = {
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
