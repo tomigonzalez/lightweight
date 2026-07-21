@@ -2,7 +2,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server' // Nuestro cliente de servidor
+import { createClient } from '@/utils/supabase/server' // cliente de servidor
 
 export async function login(formData: FormData) {
   const supabase = await createClient()
@@ -14,32 +14,29 @@ export async function login(formData: FormData) {
     return redirect('/login?error=Todos los campos son obligatorios')
   }
 
-  // Le pedimos a Supabase Auth que verifique las credenciales e inicie sesión
+  // verifica las credenciales 
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
-
-  // Si le erró a la contraseña o el mail no existe
+  // LOGIN FALLO
   if (error) {
     return redirect(`/login?error=${encodeURIComponent('Credenciales incorrectas')}`)
   }
 
-  // ¡LOGIN EXITOSO! Lo mandamos directo al Dashboard (el Rack de entrenamiento)
+  // LOGIN EXITOSO
   return redirect('/dashboard')
 }
-
 
 export async function signout() {
   const supabase = await createClient()
 
-  // 1. Le avisa a Supabase Auth que rompa la sesión en las cookies
+  // Desloguear
   const { error } = await supabase.auth.signOut()
 
   if (error) {
     console.error('Error al cerrar sesión:', error.message)
   }
 
-  // 2. Te echa al login con la sesión totalmente limpia
   return redirect('/login')
 }

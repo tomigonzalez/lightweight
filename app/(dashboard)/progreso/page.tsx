@@ -3,7 +3,6 @@ import { FiZap } from "react-icons/fi";
 export default function ProgresoPage() {
   return (
     <div className="space-y-10">
-      {/* HEADER */}
       <header>
         <h1 className="text-3xl font-black italic uppercase tracking-tighter">
           ANÁLISIS DE <span className="text-yellow-400">FUERZA</span>
@@ -13,7 +12,6 @@ export default function ProgresoPage() {
         </p>
       </header>
 
-      {/* 1. MÉTRICAS RÁPIDAS (Top) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <MetricCard
           label="Volumen Semanal"
@@ -35,7 +33,6 @@ export default function ProgresoPage() {
         />
       </div>
 
-      {/* 2. GRÁFICO DE EVOLUCIÓN (Placeholder visual) */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
@@ -46,7 +43,6 @@ export default function ProgresoPage() {
               Sentadilla libre (High Bar)
             </p>
           </div>
-          {/* Selector de ejercicio (Maqueta) */}
           <select className="bg-black border border-zinc-800 rounded-xl px-4 py-2 text-xs font-bold uppercase outline-none focus:border-yellow-400">
             <option>Sentadilla</option>
             <option>Press de Banca</option>
@@ -54,7 +50,6 @@ export default function ProgresoPage() {
           </select>
         </div>
 
-        {/* Simulador de Gráfico */}
         <div className="h-64 w-full flex items-end gap-3 px-2 border-b border-zinc-800">
           {[60, 65, 62, 70, 75, 72, 85, 90, 88, 100].map((height, i) => (
             <div
@@ -77,7 +72,6 @@ export default function ProgresoPage() {
         </div>
       </section>
 
-      {/* 3. LISTA DE RÉCORDS (PRs) */}
       <section className="space-y-4">
         <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
           Logros Recientes
@@ -101,7 +95,6 @@ export default function ProgresoPage() {
   );
 }
 
-// COMPONENTES AUXILIARES
 function MetricCard({ label, value, subValue, trend }: any) {
   return (
     <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-3xl">

@@ -1,13 +1,8 @@
 // app/(dashboard)/dashboard/page.tsx
-import { getTodayRoutine } from "@/app/services/routineQueries";
+
 import { getCurrentUserProfile } from "@/app/services/userQueries";
 import { redirect } from "next/navigation";
-import {
-  FiActivity,
-  FiAward,
-  FiArrowRight,
-  FiTrendingUp,
-} from "react-icons/fi";
+import { FiActivity, FiAward, FiArrowRight } from "react-icons/fi";
 import StartWorkoutButton from "./StartWorkoutButton";
 import { getDashboardData } from "@/app/services/dashboardQueries";
 

@@ -1,5 +1,6 @@
+// app/(auth)/login/page.tsx
 import Link from "next/link";
-import { FaGoogle } from "react-icons/fa"; // Si no tenés react-icons, podés usar un SVG
+import { FaGoogle } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import { login } from "./actions";
 
@@ -23,7 +24,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </Link>
       </div>
       <div className="w-full max-w-md space-y-8">
-        {/* Header */}
         <div className="text-center">
           <h2 className="text-4xl font-black italic tracking-tighter uppercase">
             BIENVENIDO <span className="text-yellow-400">DE NUEVO</span>
@@ -43,14 +43,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         )}
 
-        {/* Botón de Google */}
         <div className="space-y-4 mt-8">
           <button className="w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-[0.98]">
             <FaGoogle className="text-xl" />
             Continuar con Google
           </button>
 
-          {/* Divisor */}
           <div className="flex items-center gap-4 py-2">
             <div className="h-px bg-zinc-800 flex-1"></div>
             <span className="text-zinc-600 text-xs font-bold uppercase">
@@ -60,7 +58,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         </div>
 
-        {/* Formulario Tradicional */}
         <form action={login} className="space-y-4">
           <div>
             <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1">

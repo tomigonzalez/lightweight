@@ -1,6 +1,5 @@
 // app/(auth)/register/actions.ts
 'use server'
-
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 
@@ -15,13 +14,13 @@ export async function signup(formData: FormData) {
     return redirect('/register?error=Todos los campos son obligatorios')
   }
 
-  // PASO A: Le mandamos el nombre a Supabase Auth adentro de los user_metadata (options.data)
+  // Le manda nombre a Supabase Auth adentro de los user_metadata 
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        display_name: name, // 👈 Clave para leerlo después en el dashboard
+        display_name: name, // dashboard
       }
     }
   })
@@ -31,11 +30,11 @@ export async function signup(formData: FormData) {
     return redirect(`/register?error=${encodeURIComponent(errorMsg)}`)
   }
 
-  // PASO B: Insertar a mano el registro en tu tabla pública "User" usando el mismo ID
+  // Insertar el registro en tabla pública "User" usando el mismo ID
   const { error: dbError } = await supabase
     .from('User') 
     .insert({
-      id: authData.user.id, // Vinculamos el ID para que coincidan
+      id: authData.user.id, // Vincula el ID para que coincidan
       email: authData.user.email,
       name: name,   
       createdAt: new Date().toISOString(),

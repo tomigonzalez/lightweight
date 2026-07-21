@@ -5,12 +5,12 @@ export async function getCurrentUserProfile() {
   try {
     const supabase = await createClient();
     
-    // 1. Chequeamos la sesión en las cookies
+    //sesión en las cookies
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) return null;
 
-    // 2. Traemos el registro usando el cliente nativo de Supabase
+    //Trae el registro usando el cliente nativo de Supabas
     const { data: dbUser, error: dbError } = await supabase
       .from('User')
       .select('id, email, name')

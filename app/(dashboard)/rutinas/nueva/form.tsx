@@ -78,7 +78,7 @@ export default function PlanSemanalForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // Ajustado: Los días inician como descanso para obligar a darles un nombre o activarlos
+  // los días inician como descanso para obligar a darles un nombre o activarlos
   const [plan, setPlan] = useState<PlanEstado>(() =>
     crearEstadoInicial(rutinasActuales),
   );
@@ -152,7 +152,6 @@ export default function PlanSemanalForm({
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 pb-20">
-      {/* 1. Header con Guardado Global */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="">
           <h1 className="text-3xl font-black italic uppercase tracking-tighter">
@@ -171,7 +170,6 @@ export default function PlanSemanalForm({
         </button>
       </header>
 
-      {/* 3. El Core: Lista de Días */}
       <div className="space-y-6 ">
         <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2 ">
           <FiCalendar className="text-yellow-400" /> Distribución por días
@@ -189,7 +187,6 @@ export default function PlanSemanalForm({
                   : "border-zinc-800"
               }`}
             >
-              {/* Cabecera del Día */}
               <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-800/50 bg-zinc-900/50">
                 <div className="flex items-center gap-4 flex-1 w-full">
                   <span className="w-12 h-12 bg-black border border-zinc-800 rounded-xl flex items-center justify-center font-black italic text-yellow-400 text-sm">
@@ -255,7 +252,6 @@ export default function PlanSemanalForm({
                 </div>
               </div>
 
-              {/* Lista de Ejercicios del Día */}
               <div className="p-4 space-y-2 bg-black/20">
                 {diaEstado.isDescanso ? (
                   <div className="p-4 text-xs font-bold text-zinc-600 italic uppercase">
@@ -292,9 +288,7 @@ export default function PlanSemanalForm({
                       <div className="flex items-center gap-4">
                         <button
                           type="button"
-                          onClick={() => {
-                            /* TODO: Manejar modal o panel de edición */
-                          }}
+                          onClick={() => {}}
                           className="text-zinc-500 hover:text-yellow-400 transition-colors cursor-pointer p-1"
                         >
                           <FiEdit size={16} />

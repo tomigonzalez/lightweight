@@ -17,7 +17,7 @@ export async function getWorkoutComplete(
 ) {
   const supabase = await createClient();
 
-  // 1. Workout actual
+  //Workout actual
   const { data: workout, error } = await supabase
     .from("Workout")
     .select(`
@@ -43,7 +43,7 @@ export async function getWorkoutComplete(
     return null;
   }
 
-  // 2. Para cada ejercicio buscamos su último entrenamiento
+  // Para cada ejercicio buscamos su último entrenamiento
   
   for (const item of workout.routine.exercises) {
     const exerciseId = item.exercise.id;
@@ -61,7 +61,7 @@ export async function getWorkoutComplete(
       `)
       .eq("exerciseId", exerciseId)
       .eq("workout.userId", userId)
-      .neq("workoutId", workoutId) // importante: excluir el workout actual
+      .neq("workoutId", workoutId) 
       .order("createdAt", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -69,7 +69,7 @@ export async function getWorkoutComplete(
     let lastSets: LastSet[] = [];
 
     if (ultimoSet) {
-      // Traemos TODAS las series de ese workout
+      // Traemos las series de ese workout
       const { data: sets } = await supabase
         .from("Set")
         .select(`
