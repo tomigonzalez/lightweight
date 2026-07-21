@@ -5,6 +5,7 @@ import ExerciseCard from "./ExerciseCard/ExerciseCard";
 import { useState } from "react";
 import { saveWorkoutAction } from "@/app/(dashboard)/rutinas/workout/actions";
 import { useRouter } from "next/navigation";
+import { FiSave } from "react-icons/fi";
 
 interface Props {
   workout: WorkoutComplete;
@@ -121,14 +122,27 @@ export default function WorkoutForm({ workout }: Props) {
   };
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      <header>
-        <p className="text-xs uppercase text-zinc-500 font-black">
-          Entrenamiento
-        </p>
+      <header className="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-800/80 bg-zinc-950/60 py-4 backdrop-blur-md">
+        <div>
+          <p className="text-xs font-black uppercase text-zinc-500">
+            Entrenamiento
+          </p>
+          <h1 className="text-4xl font-black italic uppercase">
+            {workout.routine.name}
+          </h1>
+        </div>
 
-        <h1 className="text-4xl font-black italic uppercase">
-          {workout.routine.name}
-        </h1>
+        <div>
+          <button
+            onClick={guardarEntrenamiento}
+            className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
+          >
+            <FiSave size={30} className="text-xl inline sm:hidden " />
+            <span className="hidden sm:inline text-xs sm:text-sm">
+              Finalizar entrenamiento
+            </span>
+          </button>
+        </div>
       </header>
 
       <div className="space-y-5">
@@ -157,14 +171,6 @@ export default function WorkoutForm({ workout }: Props) {
             />
           </div>
         ))}
-      </div>
-      <div className="pt-8">
-        <button
-          onClick={guardarEntrenamiento}
-          className="w-full bg-yellow-400 text-black rounded-2xl py-5 font-black uppercase hover:bg-yellow-500 transition"
-        >
-          Finalizar entrenamiento
-        </button>
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ export default function ExerciseCard({
                   e.target.value === "" ? "" : Number(e.target.value),
                 )
               }
-              className="bg-black border border-zinc-800 rounded-xl py-3 text-center font-black outline-none focus:border-yellow-400"
+              className="w-full min-w-0 bg-black border border-zinc-800 rounded-xl py-3 text-center font-black outline-none focus:border-yellow-400"
             />
 
             <input
@@ -76,7 +76,7 @@ export default function ExerciseCard({
                   e.target.value === "" ? "" : Number(e.target.value),
                 )
               }
-              className="bg-black border border-zinc-800 rounded-xl py-3 text-center font-black outline-none focus:border-yellow-400"
+              className="w-full min-w-0 bg-black border border-zinc-800 rounded-xl py-3 text-center font-black outline-none focus:border-yellow-400"
             />
 
             <button
