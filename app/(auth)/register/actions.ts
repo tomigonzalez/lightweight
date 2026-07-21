@@ -34,8 +34,8 @@ export async function signup(formData: FormData) {
   const { error: dbError } = await supabase
     .from('User') 
     .insert({
-      id: authData.user.id, // Vincula el ID para que coincidan
-      email: authData.user.email,
+      id: authData.user!.id, // Vincula el ID para que coincidan
+      email: authData.user!.email!,
       name: name,   
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

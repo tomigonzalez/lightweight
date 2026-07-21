@@ -111,7 +111,10 @@ export default async function DashboardPage() {
                   className="bg-zinc-900/40 hover:bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all cursor-pointer group"
                 >
                   <span className="font-bold uppercase italic text-sm group-hover:text-yellow-400 transition-colors">
-                    {DAYS[routine.dayOfWeek]}: {routine.name}
+                    {routine.dayOfWeek !== null
+                      ? DAYS[routine.dayOfWeek]
+                      : "Sin día"}
+                    : {routine.name}
                   </span>
 
                   <FiArrowRight className="text-zinc-700 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />

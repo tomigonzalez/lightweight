@@ -45,7 +45,7 @@ export async function getWorkoutComplete(
 
   // Para cada ejercicio buscamos su último entrenamiento
   
-  for (const item of workout.routine.exercises) {
+  for (const item of workout.routine?.exercises || []) {
     const exerciseId = item.exercise.id;
 
     // Último set registrado de ese ejercicio
@@ -88,7 +88,8 @@ export async function getWorkoutComplete(
       lastSets = sets ?? [];
     }
 
-    item.exercise.lastSets = lastSets;
+  (item.exercise as any).lastSets = lastSets;
+
   }
 
   return workout;

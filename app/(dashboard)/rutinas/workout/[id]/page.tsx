@@ -23,9 +23,9 @@ export default async function WorkoutPage({ params }: Props) {
 
   const workout = await getWorkoutComplete(id, user.id);
 
-  if (!workout) {
-    return <div>Workout no encontrado</div>;
+  if (!workout || !workout.routine) {
+    return <div>Workout o rutina no encontrada</div>;
   }
 
-  return <WorkoutForm workout={workout} userId={user.id} />;
+  return <WorkoutForm workout={workout as any} userId={user.id} />;
 }
