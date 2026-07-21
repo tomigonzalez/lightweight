@@ -43,7 +43,7 @@ export default function DashboardLayout({
         </form>
       </aside>
 
-      <main className="flex-1 flex justify-center overflow-y-auto">
+      <main className="flex-1 flex justify-center ">
         <div className="w-full max-w-5xl px-6 py-10 pb-32 md:pb-10">
           {children}
         </div>
