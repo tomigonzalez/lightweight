@@ -6,6 +6,7 @@ import { FiActivity, FiAward, FiArrowRight } from "react-icons/fi";
 import StartWorkoutButton from "./StartWorkoutButton";
 import { getDashboardData } from "@/app/services/dashboardQueries";
 import { ReactNode } from "react";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   //  Llamamos al helper
@@ -94,9 +95,12 @@ export default async function DashboardPage() {
               <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
                 Plan Semanal Activo
               </h3>
-              <button className="text-yellow-400 text-[10px] font-black uppercase tracking-widest hover:underline">
+              <Link
+                href="/rutinas/nueva"
+                className="text-yellow-400 text-[10px] font-black uppercase tracking-widest hover:underline"
+              >
                 Ver Plan Completo
-              </button>
+              </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {infoDashboard.weeklyRoutines.map((routine) => (
