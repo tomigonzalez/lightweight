@@ -3,13 +3,18 @@
 import { useRouter } from "next/navigation";
 import { FiArrowRight } from "react-icons/fi";
 import { startWorkoutAction } from "./actions";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface Props {
   routineId: string;
+  variant?: "button" | "card";
+  children?: ReactNode;
 }
-
-export default function StartWorkoutButton({ routineId }: Props) {
+export default function StartWorkoutButton({
+  routineId,
+  variant = "button",
+  children,
+}: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -27,6 +32,20 @@ export default function StartWorkoutButton({ routineId }: Props) {
       setLoading(false);
     }
   };
+  if (variant === "card") {
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={loading}
+        className={`w-full text-left transition-all ${
+          loading ? "opacity-50 pointer-events-none" : ""
+        }`}
+      >
+        {children}
+      </button>
+    );
+  }
 
   return (
     <button

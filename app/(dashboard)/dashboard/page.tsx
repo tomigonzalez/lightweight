@@ -5,18 +5,19 @@ import { redirect } from "next/navigation";
 import { FiActivity, FiAward, FiArrowRight } from "react-icons/fi";
 import StartWorkoutButton from "./StartWorkoutButton";
 import { getDashboardData } from "@/app/services/dashboardQueries";
+import { ReactNode } from "react";
 
 export default async function DashboardPage() {
-  // 1. Llamamos al helper en una sola línea limpia
+  //  Llamamos al helper
   const profile = await getCurrentUserProfile();
 
-  // 2. Si no hay perfil (no está logueado), rebote automático
+  // Si no hay perfil (no está logueado), rebote automático
   if (!profile) {
     redirect("/login");
   }
   const infoDashboard = await getDashboardData(profile.id);
   console.log(infoDashboard);
-  // 3. Usamos el nombre real de la BD con un fallback seguro por las dudas
+  //  Usamos el nombre real de la BD con un fallback
   const nombreUsuario =
     profile.name?.toUpperCase() || profile.email.split("@")[0].toUpperCase();
 
@@ -31,14 +32,12 @@ export default async function DashboardPage() {
   ];
 
   const hoy = DAYS[new Date().getDay()];
-  const porcentajeMejora = "+5.2%";
   const cantidadEjercicios = infoDashboard.todayRoutine?.exercises?.length ?? 0;
 
   const nombreRutina = infoDashboard.todayRoutine?.name ?? "Descanso";
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* 1. Header de Bienvenida */}
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl md:text-4xl font-black italic tracking-tighter uppercase leading-none">
@@ -53,10 +52,8 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      {/* 2. Grid Principal */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          {/* Tarjeta de Sugerencia Dinámica (Basada en el día) */}
           <section className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 relative overflow-hidden group">
             <div className="relative z-10">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-400 mb-4 block">
@@ -66,7 +63,6 @@ export default async function DashboardPage() {
                 {nombreRutina}
               </h2>
 
-              {/* COMPARATIVA DE "SOBREESCRITURA" VISUAL */}
               <div className="flex items-center gap-3 mb-8 bg-black/40 w-fit px-4 py-2 rounded-xl border border-zinc-800/50">
                 <div className="text-zinc-500 text-[10px] font-bold uppercase">
                   Última vez
@@ -88,13 +84,11 @@ export default async function DashboardPage() {
               )}
             </div>
 
-            {/* Decoración de fondo */}
             <div className="absolute -right-2.5 -bottom-5 text-9xl font-black italic text-white/3 pointer-events-none group-hover:text-yellow-400/[0.07] transition-colors uppercase">
               {nombreRutina.split(" ")[0]}
             </div>
           </section>
 
-          {/* Tus Rutinas de la Semana */}
           <section className="space-y-4">
             <div className="flex justify-between items-end">
               <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
@@ -106,25 +100,27 @@ export default async function DashboardPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {infoDashboard.weeklyRoutines.map((routine) => (
-                <div
+                <StartWorkoutButton
+                  routineId={routine.id}
+                  variant="card"
                   key={routine.id}
-                  className="bg-zinc-900/40 hover:bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all cursor-pointer group"
                 >
-                  <span className="font-bold uppercase italic text-sm group-hover:text-yellow-400 transition-colors">
-                    {routine.dayOfWeek !== null
-                      ? DAYS[routine.dayOfWeek]
-                      : "Sin día"}
-                    : {routine.name}
-                  </span>
+                  <div className="bg-zinc-900/40 hover:bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all cursor-pointer group">
+                    <span className="font-bold uppercase italic text-sm group-hover:text-yellow-400 transition-colors">
+                      {routine.dayOfWeek !== null
+                        ? DAYS[routine.dayOfWeek]
+                        : "Sin día"}
+                      : {routine.name}
+                    </span>
 
-                  <FiArrowRight className="text-zinc-700 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
-                </div>
+                    <FiArrowRight className="text-zinc-700 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
+                  </div>
+                </StartWorkoutButton>
               ))}
             </div>
           </section>
         </div>
 
-        {/* Columna Derecha: Estadísticas */}
         <aside className="space-y-6">
           <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
             Resumen de Fuerza
@@ -156,7 +152,7 @@ export default async function DashboardPage() {
                 </p>
               </div>
             )}
-            {/* Widget de Próximo Objetivo */}
+
             <div className="bg-yellow-400 p-6 rounded-3xl text-black">
               <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
                 Próximo Objetivo
@@ -181,7 +177,7 @@ function StatCard({
   value,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
+  icon: ReactNode;
   label: string;
   value: string;
 }) {
