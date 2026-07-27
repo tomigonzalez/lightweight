@@ -6,6 +6,7 @@ import { useState } from "react";
 import { saveWorkoutAction } from "@/app/(dashboard)/rutinas/workout/actions";
 import { useRouter } from "next/navigation";
 import { FiSave } from "react-icons/fi";
+import Link from "next/link";
 
 interface Props {
   workout: WorkoutComplete;
@@ -133,15 +134,24 @@ export default function WorkoutForm({ workout }: Props) {
         </div>
 
         <div>
-          <button
-            onClick={guardarEntrenamiento}
-            className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
-          >
-            <FiSave size={30} className="text-xl inline sm:hidden " />
-            <span className="hidden sm:inline text-xs sm:text-sm">
-              Finalizar entrenamiento
-            </span>
-          </button>
+          {workout.routine.exercises.length === 0 ? (
+            <Link
+              href="/rutinas/nueva"
+              className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500 inline-flex items-center justify-center"
+            >
+              <span className="text-xs sm:text-sm">Agregar ejercicios</span>
+            </Link>
+          ) : (
+            <button
+              onClick={guardarEntrenamiento}
+              className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
+            >
+              <FiSave size={30} className="text-xl inline sm:hidden" />
+              <span className="hidden sm:inline text-xs sm:text-sm">
+                Finalizar entrenamiento
+              </span>
+            </button>
+          )}
         </div>
       </header>
 

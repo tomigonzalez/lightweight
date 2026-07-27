@@ -152,8 +152,8 @@ export default function PlanSemanalForm({
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 pb-20">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="">
+      <header className="flex flex-row md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex flex-col">
           <h1 className="text-3xl font-black italic uppercase tracking-tighter">
             MI <span className="text-yellow-400">RUTINA SEMANAL</span>
           </h1>
@@ -164,9 +164,12 @@ export default function PlanSemanalForm({
         <button
           onClick={handleGuardarTodo}
           disabled={loading}
-          className="w-full md:w-auto bg-yellow-400 text-black px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-yellow-500 transition-all shadow-lg shadow-yellow-400/10 flex items-center justify-center gap-2 disabled:opacity-50"
+          className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
         >
-          <FiSave /> {loading ? "GUARDANDO FIERROS..." : "Guardar"}
+          <FiSave size={30} className="text-xl inline sm:hidden" />
+          <span className="hidden sm:inline text-xs sm:text-sm">
+            {loading ? "GUARDANDO FIERROS..." : "Guardar"}
+          </span>
         </button>
       </header>
 
