@@ -1,6 +1,6 @@
 // app/(dashboard)/rutinas/nueva/form.tsx
 "use client";
-
+//
 import { useState } from "react";
 import {
   FiSave,

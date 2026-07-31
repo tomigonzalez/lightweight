@@ -9,7 +9,7 @@ import { ReactNode } from "react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  //  Llamamos al helper
+  // Llamamos al helper
   const profile = await getCurrentUserProfile();
 
   // Si no hay perfil (no está logueado), rebote automático
