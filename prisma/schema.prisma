@@ -56,6 +56,7 @@ model RoutineExercise {
   exerciseId String
   routine    Routine  @relation(fields: [routineId], references: [id])
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  isPinned   Boolean @default(false)
   order      Int?     
 }
 

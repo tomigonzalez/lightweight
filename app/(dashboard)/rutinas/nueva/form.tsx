@@ -9,17 +9,19 @@ import {
   FiClock,
   FiCalendar,
   FiEdit,
+  FiStar,
 } from "react-icons/fi";
 
 import { useRouter } from "next/navigation";
 import { guardarPlanSemanalAction } from "./actions";
-import { FaBed } from "react-icons/fa";
+import { FaBed, FaStar } from "react-icons/fa";
 import { GiWeightLiftingUp } from "react-icons/gi";
 
 interface ExerciseBase {
   id: string;
   name: string;
   muscleGroup: string;
+  isPinned: boolean;
 }
 
 interface DiaEstado {
@@ -64,6 +66,7 @@ function crearEstadoInicial(rutinasActuales: any[]): PlanEstado {
           id: re.exercise.id,
           name: re.exercise.name,
           muscleGroup: re.exercise.muscleGroup,
+          isPinned: re.isPinned,
         })) ?? [],
     };
   }
@@ -116,7 +119,13 @@ export default function PlanSemanalForm({
       ...prev,
       [diaId]: {
         ...prev[diaId],
-        exercises: [...prev[diaId].exercises, cacheEx],
+        exercises: [
+          ...prev[diaId].exercises,
+          {
+            ...cacheEx,
+            isPinned: false,
+          },
+        ],
       },
     }));
   };
@@ -132,7 +141,19 @@ export default function PlanSemanalForm({
       },
     }));
   };
-
+  const togglePinned = (diaId: number, index: number) => {
+    setPlan((prev) => ({
+      ...prev,
+      [diaId]: {
+        ...prev[diaId],
+        exercises: prev[diaId].exercises.map((ex, i) => ({
+          ...ex,
+          // solo puede haber uno pineado por día
+          isPinned: i === index ? !ex.isPinned : false,
+        })),
+      },
+    }));
+  };
   const handleGuardarTodo = async () => {
     setLoading(true);
 
@@ -320,10 +341,17 @@ export default function PlanSemanalForm({
                       <div className="flex items-center gap-4">
                         <button
                           type="button"
-                          onClick={() => {}}
-                          className="text-zinc-500 hover:text-yellow-400 transition-colors cursor-pointer p-1"
+                          onClick={() => togglePinned(dia.id, index)}
+                          className="cursor-pointer p-1 transition-colors"
                         >
-                          <FiEdit size={16} />
+                          {ex.isPinned ? (
+                            <FaStar className="text-yellow-400" size={16} />
+                          ) : (
+                            <FiStar
+                              className="text-zinc-500 hover:text-yellow-400"
+                              size={16}
+                            />
+                          )}
                         </button>
                         <button
                           type="button"

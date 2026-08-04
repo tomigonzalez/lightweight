@@ -26,6 +26,7 @@ export default async function NuevaPlanificacionSemanal() {
       dayOfWeek,
       exercises:RoutineExercise (
         order,
+        isPinned,
         exercise:Exercise (
           id,
           name,
