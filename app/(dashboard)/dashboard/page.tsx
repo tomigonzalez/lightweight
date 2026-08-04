@@ -9,7 +9,7 @@ import { ReactNode } from "react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  //  Llamamos al helper
+  // Llamamos al helper
   const profile = await getCurrentUserProfile();
 
   // Si no hay perfil (no está logueado), rebote automático
@@ -158,15 +158,43 @@ export default async function DashboardPage() {
             )}
 
             <div className="bg-yellow-400 p-6 rounded-3xl text-black">
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
-                Próximo Objetivo
-              </p>
-              <p className="text-xl font-black italic uppercase leading-tight mt-1">
-                Banca 100KG
-              </p>
-              <div className="mt-4 h-1.5 bg-black/20 rounded-full overflow-hidden">
-                <div className="h-full bg-black w-[80%]"></div>
-              </div>
+              {infoDashboard.pinnedPR ? (
+                <>
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
+                    Peso máximo en
+                  </p>
+
+                  <p className="text-2xl font-black italic uppercase mt-2">
+                    {infoDashboard.pinnedPR.exercise}
+                  </p>
+
+                  <div className="mt-6">
+                    <p className="text-5xl font-black italic leading-none">
+                      {infoDashboard.pinnedPR.weight}
+                      <span className="text-2xl ml-2">KG</span>
+                    </p>
+
+                    <p className="text-sm font-bold uppercase mt-2">
+                      {infoDashboard.pinnedPR.reps} REPS
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
+                    Peso máximo
+                  </p>
+
+                  <p className="text-xl font-black italic uppercase mt-2">
+                    Elegí un ejercicio ⭐
+                  </p>
+
+                  <p className="text-sm mt-6 opacity-70">
+                    Marcá un ejercicio de tu rutina para seguir su récord
+                    personal.
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </aside>

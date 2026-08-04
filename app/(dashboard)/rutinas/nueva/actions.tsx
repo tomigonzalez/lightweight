@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 interface DiaFormulario {
   name: string;
   isDescanso: boolean;
-  exercises: { id: string }[];
+  exercises: { id: string; isPinned: boolean }[];
 }
 
 interface PlanFormData {
@@ -132,11 +132,12 @@ export async function guardarPlanSemanalAction(formData: PlanFormData) {
           routineId: rutinaId,
           exerciseId: ex.id,
           order: index + 1,
+          isPinned: ex.isPinned,
         }));
 
         const { error: errorEjercicios } = await supabase
           .from("RoutineExercise")
-          .insert(relaciones);
+          .insert(relaciones as any);
 
         if (errorEjercicios) {
           throw errorEjercicios;
