@@ -8,7 +8,6 @@ import {
   FiTrash2,
   FiClock,
   FiCalendar,
-  FiEdit,
   FiStar,
 } from "react-icons/fi";
 
@@ -66,7 +65,7 @@ function crearEstadoInicial(rutinasActuales: any[]): PlanEstado {
           id: re.exercise.id,
           name: re.exercise.name,
           muscleGroup: re.exercise.muscleGroup,
-          isPinned: re.isPinned,
+          isPinned: re.isPinned ?? false,
         })) ?? [],
     };
   }

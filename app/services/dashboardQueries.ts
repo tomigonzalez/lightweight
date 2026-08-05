@@ -19,24 +19,25 @@ export async function getDashboardData(userId: string) {
     { data: workouts },
   ] = await Promise.all([
     // 1. Rutina de hoy
-    supabase
-      .from("Routine")
-      .select(`
+   ( supabase
+    .from("Routine")
+    .select(`
+      id,
+      name,
+      exercises:RoutineExercise(
         id,
-        name,
-        exercises:RoutineExercise(
+        isPinned,
+        exerciseId,
+        exercise:Exercise(
           id,
-          isPinned,
-          exerciseId,
-          exercise:Exercise(
-            id,
-            name
-          )
+          name
         )
-      `)
-      .eq("userId", userId)
-      .eq("dayOfWeek", today)
-      .maybeSingle(),
+      )
+    `) as any
+)
+  .eq("userId", userId)
+  .eq("dayOfWeek", today)
+  .maybeSingle(),
 
     // 2. Plan semanal
     supabase

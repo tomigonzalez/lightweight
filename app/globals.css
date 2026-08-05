@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .bg-brand-gradient {
+    background-image: linear-gradient(to bottom right, #facc15, #facc15, #f59e0b);
+  }
+}

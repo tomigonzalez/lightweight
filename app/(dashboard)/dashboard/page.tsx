@@ -2,11 +2,15 @@
 
 import { getCurrentUserProfile } from "@/app/services/userQueries";
 import { redirect } from "next/navigation";
-import { FiActivity, FiAward, FiArrowRight } from "react-icons/fi";
-import StartWorkoutButton from "./StartWorkoutButton";
+import { FiActivity, FiAward } from "react-icons/fi";
+export const dynamic = "force-dynamic";
 import { getDashboardData } from "@/app/services/dashboardQueries";
 import { ReactNode } from "react";
-import Link from "next/link";
+
+import { DashboardHeader } from "./components/DashboardHeader/DashboardHeader";
+import { TodayWorkoutBanner } from "./components/TodayWorkoutBanner/TodayWorkoutBanner";
+import { PinnedPRCard } from "./components/PinnedPRCard/PinnedPRCard";
+import { WeeklyPlanSection } from "./components/WeeklyPlanSection/WeeklyPlanSection";
 
 export default async function DashboardPage() {
   // Llamamos al helper
@@ -16,9 +20,10 @@ export default async function DashboardPage() {
   if (!profile) {
     redirect("/login");
   }
+
   const infoDashboard = await getDashboardData(profile.id);
-  console.log(infoDashboard);
-  //  Usamos el nombre real de la BD con un fallback
+
+  // Usamos el nombre real de la BD con un fallback
   const nombreUsuario =
     profile.name?.toUpperCase() || profile.email.split("@")[0].toUpperCase();
 
@@ -39,107 +44,46 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black italic tracking-tighter uppercase leading-none">
-            HOLA, <span className="text-yellow-400">{nombreUsuario}</span>
-          </h1>
-          <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-2">
-            Hoy es {hoy}, ¿listo para la sobrecarga?
-          </p>
-        </div>
-        <div className="md:hidden w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center text-xl">
-          👤
-        </div>
-      </header>
+      <DashboardHeader nombreUsuario={nombreUsuario} hoy={hoy} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <section className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 relative overflow-hidden group">
-            <div className="relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-400 mb-4 block">
-                Sugerencia para hoy ({hoy})
-              </span>
-              <h2 className="text-4xl font-black italic uppercase leading-none mb-2">
-                {nombreRutina}
-              </h2>
-
-              <div className="flex items-center gap-3 mb-8 bg-black/40 w-fit px-4 py-2 rounded-xl border border-zinc-800/50">
-                <div className="text-zinc-500 text-[10px] font-bold uppercase">
-                  Última vez
-                </div>
-                <div className="text-white font-black italic text-sm">
-                  {cantidadEjercicios} ejercicios
-                </div>
-              </div>
-
-              {infoDashboard.todayRoutine ? (
-                <StartWorkoutButton routineId={infoDashboard.todayRoutine.id} />
-              ) : (
-                <button
-                  disabled
-                  className="bg-zinc-800 text-zinc-500 font-black px-8 py-4 rounded-2xl uppercase tracking-widest cursor-not-allowed"
-                >
-                  HOY ES DESCANSO
-                </button>
-              )}
-            </div>
-
-            <div className="absolute -right-2.5 -bottom-5 text-9xl font-black italic text-white/3 pointer-events-none group-hover:text-yellow-400/[0.07] transition-colors uppercase">
-              {nombreRutina.split(" ")[0]}
-            </div>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex justify-between items-end">
-              <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
-                Plan Semanal Activo
-              </h3>
-              <Link
-                href="/rutinas/nueva"
-                className="text-yellow-400 text-[10px] font-black uppercase tracking-widest hover:underline"
-              >
-                Ver Plan Completo
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {infoDashboard.weeklyRoutines.map((routine) => (
-                <StartWorkoutButton
-                  routineId={routine.id}
-                  variant="card"
-                  key={routine.id}
-                >
-                  <div className="bg-zinc-900/40 hover:bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all cursor-pointer group">
-                    <span className="font-bold uppercase italic text-sm group-hover:text-yellow-400 transition-colors">
-                      {routine.dayOfWeek !== null
-                        ? DAYS[routine.dayOfWeek]
-                        : "Sin día"}
-                      : {routine.name}
-                    </span>
-
-                    <FiArrowRight className="text-zinc-700 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
-                  </div>
-                </StartWorkoutButton>
-              ))}
-            </div>
-          </section>
+          <TodayWorkoutBanner
+            hoy={hoy}
+            nombreRutina={nombreRutina}
+            cantidadEjercicios={cantidadEjercicios}
+            todayRoutineId={infoDashboard.todayRoutine?.id}
+          />
+          <div className="hidden lg:block">
+            <WeeklyPlanSection
+              weeklyRoutines={infoDashboard.weeklyRoutines}
+              days={DAYS}
+            />
+          </div>
         </div>
 
         <aside className="space-y-6">
           <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">
             Resumen de Fuerza
           </h3>
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-            <StatCard
-              icon={<FiActivity />}
-              label="Racha Actual"
-              value={`${infoDashboard.streak} DÍAS`}
-            />
-            <StatCard
-              icon={<FiAward />}
-              label="Entrenamientos Mes"
-              value={`${infoDashboard.workoutsThisMonth}`}
-            />
+
+          <div className="grid grid-cols-1 gap-4">
+            <PinnedPRCard pinnedPR={infoDashboard.pinnedPR} />
+
+            <div className="grid grid-cols-2 gap-4">
+              <StatCard
+                icon={<FiActivity />}
+                label="Racha Actual"
+                value={`${infoDashboard.streak} DÍAS`}
+              />
+              <StatCard
+                icon={<FiAward />}
+                label="Entrenamientos Mes"
+                value={`${infoDashboard.workoutsThisMonth}`}
+              />
+            </div>
+
+            {/* Último entrenamiento */}
             {infoDashboard.lastWorkout && (
               <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                 <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">
@@ -150,54 +94,22 @@ export default async function DashboardPage() {
                   {infoDashboard.lastWorkout.routine?.name ?? "Rutina"}
                 </p>
 
-                <p className="text-zinc-400 text-sm mt-2">
-                  Volumen total: {Math.round(infoDashboard.lastWorkoutVolume)}{" "}
-                  kg
+                <p className="text-zinc-400 text-sm mt-2 font-medium">
+                  Volumen total:{" "}
+                  <span className="text-white font-bold">
+                    {Math.round(infoDashboard.lastWorkoutVolume)} kg
+                  </span>
                 </p>
               </div>
             )}
-
-            <div className="bg-yellow-400 p-6 rounded-3xl text-black">
-              {infoDashboard.pinnedPR ? (
-                <>
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
-                    Peso máximo en
-                  </p>
-
-                  <p className="text-2xl font-black italic uppercase mt-2">
-                    {infoDashboard.pinnedPR.exercise}
-                  </p>
-
-                  <div className="mt-6">
-                    <p className="text-5xl font-black italic leading-none">
-                      {infoDashboard.pinnedPR.weight}
-                      <span className="text-2xl ml-2">KG</span>
-                    </p>
-
-                    <p className="text-sm font-bold uppercase mt-2">
-                      {infoDashboard.pinnedPR.reps} REPS
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-70">
-                    Peso máximo
-                  </p>
-
-                  <p className="text-xl font-black italic uppercase mt-2">
-                    Elegí un ejercicio ⭐
-                  </p>
-
-                  <p className="text-sm mt-6 opacity-70">
-                    Marcá un ejercicio de tu rutina para seguir su récord
-                    personal.
-                  </p>
-                </>
-              )}
-            </div>
           </div>
         </aside>
+        <div className="lg:hidden block">
+          <WeeklyPlanSection
+            weeklyRoutines={infoDashboard.weeklyRoutines}
+            days={DAYS}
+          />
+        </div>
       </div>
     </div>
   );
@@ -208,19 +120,18 @@ function StatCard({
   label,
   value,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: ReactNode;
   label: string;
   value: string;
 }) {
   return (
-    <div className="bg-zinc-900/30 border border-zinc-800 p-6 rounded-3xl flex flex-col gap-2 hover:border-zinc-700 transition-colors">
+    <div className="bg-zinc-900/30 border border-zinc-800 p-5 rounded-3xl flex flex-col gap-2 hover:border-zinc-700 transition-colors">
       <div className="text-yellow-400 text-xl">{icon}</div>
       <div>
-        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+        <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500">
           {label}
         </p>
-        <p className="text-2xl font-black italic uppercase leading-tight">
+        <p className="text-xl font-black italic uppercase leading-tight">
           {value}
         </p>
       </div>

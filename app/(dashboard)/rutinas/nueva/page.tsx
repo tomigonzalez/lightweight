@@ -40,7 +40,12 @@ export default async function NuevaPlanificacionSemanal() {
 
   return (
     <PlanSemanalForm
-      exercisesBase={exercises || []}
+      exercisesBase={
+        exercises?.map((ex) => ({
+          ...ex,
+          isPinned: false,
+        })) || []
+      }
       rutinasActuales={rutinas || []}
     />
   );

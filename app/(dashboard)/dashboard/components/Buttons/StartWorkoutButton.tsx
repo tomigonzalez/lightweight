@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { FiArrowRight } from "react-icons/fi";
-import { startWorkoutAction } from "./actions";
+
 import { ReactNode, useState } from "react";
+import { startWorkoutAction } from "../../actions";
 
 interface Props {
   routineId: string;
@@ -51,7 +52,7 @@ export default function StartWorkoutButton({
     <button
       onClick={handleClick}
       disabled={loading}
-      className="bg-yellow-400 text-black font-black px-8 py-4 rounded-2xl uppercase tracking-widest hover:bg-yellow-500 transition-all flex items-center gap-2 disabled:opacity-50"
+      className="bg-brand-gradient cursor-pointer hover:brightness-85 text-black font-black px-8 py-4 rounded-2xl uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-50"
     >
       {loading ? "INICIANDO..." : "EMPEZAR AHORA"}
       <FiArrowRight />
