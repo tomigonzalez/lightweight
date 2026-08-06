@@ -36,7 +36,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-sm mx-auto sm:max-w-none">
             <Link
               href="/register"
-              className="w-full sm:w-auto bg-yellow-400 text-black px-10 py-4 md:py-5 rounded-xl font-black uppercase tracking-widest hover:bg-yellow-500 transition-all text-center"
+              className="w-full sm:w-auto bg-brand-gradient hover:brightness-85 text-black px-10 py-4 md:py-5 rounded-xl font-black uppercase tracking-widest transition-all text-center"
             >
               Crear mi cuenta
             </Link>

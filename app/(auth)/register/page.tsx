@@ -79,7 +79,7 @@ export default async function RegisterPage({
 
           <button
             type="submit"
-            className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-4"
+            className="w-full  text-black font-black py-4 rounded-xl uppercase tracking-widest bg-brand-gradient hover:brightness-85 transition-all active:scale-[0.98] mt-4"
           >
             Crear Cuenta
           </button>
