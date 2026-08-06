@@ -137,14 +137,14 @@ export default function WorkoutForm({ workout }: Props) {
           {workout.routine.exercises.length === 0 ? (
             <Link
               href="/rutinas/nueva"
-              className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500 inline-flex items-center justify-center"
+              className="rounded-2xl bg-brand-gradien sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:brightness-85 inline-flex items-center justify-center"
             >
               <span className="text-xs sm:text-sm">Agregar ejercicios</span>
             </Link>
           ) : (
             <button
               onClick={guardarEntrenamiento}
-              className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
+              className="rounded-2xl bg-brand-gradient sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition cursor-pointer hover:brightness-85"
             >
               <FiSave size={30} className="text-xl inline sm:hidden" />
               <span className="hidden sm:inline text-xs sm:text-sm">
