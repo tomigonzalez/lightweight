@@ -22,7 +22,7 @@ export default function RutinasGestionPage() {
         </div>
         <Link
           href="/rutinas/nueva"
-          className="bg-yellow-400 text-black p-3 md:px-6 md:py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-yellow-500 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/10"
+          className="bg-brand-gradient hover:brightness-85 text-black p-3 md:px-6 md:py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/10"
         >
           <FiPlus className="text-lg" />
           <span className="hidden md:block">Nuevo Plan</span>
@@ -59,7 +59,7 @@ export default function RutinasGestionPage() {
               {["L", "M", "M", "J", "V", "S", "D"].map((dia, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
                   <div
-                    className={`w-full aspect-square rounded-lg flex items-center justify-center font-black text-[10px] ${i < 5 ? "bg-yellow-400 text-black" : "bg-zinc-800 text-zinc-600"}`}
+                    className={`w-full aspect-square rounded-lg flex items-center justify-center font-black text-[10px] ${i < 5 ? "bg-brand-gradient text-black" : "bg-zinc-800 text-zinc-600"}`}
                   >
                     {dia}
                   </div>

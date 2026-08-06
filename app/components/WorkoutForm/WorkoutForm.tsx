@@ -137,7 +137,7 @@ export default function WorkoutForm({ workout }: Props) {
           {workout.routine.exercises.length === 0 ? (
             <Link
               href="/rutinas/nueva"
-              className="rounded-2xl bg-brand-gradien sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:brightness-85 inline-flex items-center justify-center"
+              className="rounded-2xl bg-brand-gradient hover:brightness-85 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition inline-flex items-center justify-center"
             >
               <span className="text-xs sm:text-sm">Agregar ejercicios</span>
             </Link>

@@ -85,7 +85,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <button
             type="submit"
-            className="w-full bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-yellow-500 transition-all active:scale-[0.98] mt-2"
+            className="w-full  text-black font-black py-4 rounded-xl uppercase tracking-widest bg-brand-gradient hover:brightness-85 ansition-all active:scale-[0.98] mt-2"
           >
             Entrar al Rack
           </button>

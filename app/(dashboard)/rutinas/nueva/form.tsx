@@ -186,7 +186,7 @@ export default function PlanSemanalForm({
         <button
           onClick={handleGuardarTodo}
           disabled={loading}
-          className="rounded-2xl bg-yellow-400 sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition hover:bg-yellow-500"
+          className="rounded-2xl cursor-pointer sm:px-6 sm:py-4 px-4 py-2 font-black uppercase text-black transition bg-brand-gradient hover:brightness-85"
         >
           <FiSave size={30} className="text-xl inline sm:hidden" />
           <span className="hidden sm:inline text-xs sm:text-sm">
