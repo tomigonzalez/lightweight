@@ -1,32 +1,39 @@
-import {
-  FiCalendar,
-  FiEdit3,
-  FiPlus,
-  FiChevronRight,
-  FiCheckCircle,
-} from "react-icons/fi";
+import { FiCalendar, FiEdit3, FiPlus, FiCheckCircle } from "react-icons/fi";
 import Link from "next/link";
+import { getPlans } from "@/app/services/planQueries";
+import { getCurrentUserProfile } from "@/app/services/userQueries";
+import { redirect } from "next/navigation";
 
-export default function RutinasGestionPage() {
+export default async function RutinasGestionPage() {
+  const profile = await getCurrentUserProfile();
+
+  if (!profile) {
+    redirect("/login");
+  }
+
+  const routines = await getPlans(profile.id);
+
+  const diasSemana = Array(7).fill(null);
+
+  routines.forEach((routine) => {
+    if (routine.dayOfWeek !== null) {
+      diasSemana[routine.dayOfWeek] = routine;
+    }
+  });
+  const frecuencia = routines.length;
+
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       {/* HEADER */}
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-black italic uppercase tracking-tighter">
-            MIS <span className="text-yellow-400">PLANES</span>
+            MI <span className="text-yellow-400">RUTINA</span>
           </h1>
           <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-1">
-            Gestioná tu programación semanal
+            Gestioná tu rutina
           </p>
         </div>
-        <Link
-          href="/rutinas/nueva"
-          className="bg-brand-gradient hover:brightness-85 text-black p-3 md:px-6 md:py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/10"
-        >
-          <FiPlus className="text-lg" />
-          <span className="hidden md:block">Nuevo Plan</span>
-        </Link>
       </header>
 
       {/* 1. PLAN ACTUAL (EL QUE ESTÁ EN USO) */}
@@ -40,10 +47,10 @@ export default function RutinasGestionPage() {
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="text-2xl font-black italic uppercase text-white">
-                  Hipertrofia - PPL
+                  PLAN SEMANAL
                 </h3>
                 <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">
-                  Creado hace 3 semanas • Frecuencia 5x
+                  {frecuencia} DÍAS CONFIGURADOS
                 </p>
               </div>
               <Link
@@ -55,65 +62,41 @@ export default function RutinasGestionPage() {
             </div>
 
             {/* Vista Previa de la Semana */}
-            <div className="grid grid-cols-7 gap-2 mt-8">
-              {["L", "M", "M", "J", "V", "S", "D"].map((dia, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
+            {frecuencia > 0 ? (
+              <div className="grid grid-cols-7 gap-2 mt-8">
+                {diasSemana.map((routine, i) => (
                   <div
-                    className={`w-full aspect-square rounded-lg flex items-center justify-center font-black text-[10px] ${i < 5 ? "bg-brand-gradient text-black" : "bg-zinc-800 text-zinc-600"}`}
+                    key={i}
+                    className={`w-full aspect-square rounded-lg flex items-center justify-center font-black text-[10px] ${
+                      routine
+                        ? "bg-brand-gradient text-black"
+                        : "bg-zinc-800 text-zinc-600"
+                    }`}
                   >
-                    {dia}
+                    {["D", "L", "M", "X", "J", "V", "S"][i]}
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Marca de agua de fondo */}
-          <FiCalendar className="absolute -right-8 -bottom-8 text-white/[0.03] text-[12rem] -rotate-12 pointer-events-none" />
-        </div>
-      </section>
-
-      {/* 2. OTROS PLANES GUARDADOS (BIBLIOTECA) */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-black uppercase tracking-widest text-zinc-500">
-          Historial de Planes
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Plan Card */}
-          <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl flex items-center justify-between group hover:border-zinc-700 transition-all cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-500 group-hover:text-yellow-400 transition-colors">
-                <FiCalendar />
+                ))}
               </div>
-              <div>
-                <p className="font-black italic uppercase text-sm">
-                  Fuerza 5x5 - Básicos
-                </p>
-                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-tighter">
-                  Usado por última vez en Enero
-                </p>
-              </div>
-            </div>
-            <FiChevronRight className="text-zinc-800 group-hover:text-yellow-400 transition-colors" />
-          </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16">
+                <FiCalendar className="text-6xl text-zinc-700 mb-5" />
 
-          {/* Otro Plan Card */}
-          <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl flex items-center justify-between group hover:border-zinc-700 transition-all cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-500 group-hover:text-yellow-400 transition-colors">
-                <FiCalendar />
-              </div>
-              <div>
-                <p className="font-black italic uppercase text-sm">
-                  Full Body - 3 Días
+                <p className="text-zinc-400 font-bold uppercase tracking-widest text-sm mb-6">
+                  Todavía no creaste una rutina
                 </p>
-                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-tighter">
-                  Sin activar
-                </p>
+
+                <Link
+                  href="/rutinas/nueva"
+                  className="bg-brand-gradient text-black px-6 py-3 rounded-xl font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-transform"
+                >
+                  <FiPlus />
+                  Agregar rutina
+                </Link>
               </div>
-            </div>
-            <FiChevronRight className="text-zinc-800 group-hover:text-yellow-400 transition-colors" />
+            )}
+
+            {/* Marca de agua de fondo */}
+            <FiCalendar className="absolute -right-8 -bottom-8 text-white/3 text-[12rem] -rotate-12 pointer-events-none" />
           </div>
         </div>
       </section>
