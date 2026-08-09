@@ -87,9 +87,20 @@ export default async function DashboardPage() {
             {infoDashboard.lastWorkout && (
               <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
                 <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">
-                  Último entrenamiento
+                  Último entrenamiento (
+                  <span className="capitalize">
+                    {
+                      DAYS[
+                        new Date(
+                          infoDashboard.lastWorkout.date.includes("T")
+                            ? infoDashboard.lastWorkout.date
+                            : `${infoDashboard.lastWorkout.date}T00:00:00`,
+                        ).getDay()
+                      ]
+                    }
+                  </span>
+                  )
                 </p>
-
                 <p className="text-xl font-black italic uppercase mt-2">
                   {infoDashboard.lastWorkout.routine?.name ?? "Rutina"}
                 </p>
