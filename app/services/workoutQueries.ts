@@ -1,6 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
 
-
 type LastSet = {
   id: string;
   setNumber: number;
@@ -17,7 +16,7 @@ export async function getWorkoutComplete(
 ) {
   const supabase = await createClient();
 
-  //Workout actual
+  // 1. Traemos el workout actual + rutina + ejercicios
   const { data: workout, error } = await supabase
     .from("Workout")
     .select(`
@@ -43,53 +42,104 @@ export async function getWorkoutComplete(
     return null;
   }
 
-  // Para cada ejercicio buscamos su último entrenamiento
-  
-  for (const item of workout.routine?.exercises || []) {
-    const exerciseId = item.exercise.id;
+  const exercises = workout.routine?.exercises ?? [];
 
-    // Último set registrado de ese ejercicio
-    const { data: ultimoSet } = await supabase
-      .from("Set")
-      .select(`
-        workoutId,
-        workout:Workout!inner(
-          id,
-          userId,
-          date
-        )
-      `)
-      .eq("exerciseId", exerciseId)
-      .eq("workout.userId", userId)
-      .neq("workoutId", workoutId) 
-      .order("createdAt", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  if (exercises.length === 0) {
+    return workout;
+  }
 
-    let lastSets: LastSet[] = [];
+  // IDs de los ejercicios que aparecen en esta rutina
+  const exerciseIds = exercises.map(
+    (item) => item.exercise.id
+  );
 
-    if (ultimoSet) {
-      // Traemos las series de ese workout
-      const { data: sets } = await supabase
-        .from("Set")
-        .select(`
-          id,
-          setNumber,
-          weight,
-          reps,
-          isWarmup,
-          exerciseId,
-          workoutId
-        `)
-        .eq("exerciseId", exerciseId)
-        .eq("workoutId", ultimoSet.workoutId)
-        .order("setNumber", { ascending: true });
+  // 2. Traemos TODOS los sets históricos de esos ejercicios
+  //    pertenecientes al usuario, excepto el workout actual.
+  const { data: historicalSets, error: setsError } = await supabase
+    .from("Set")
+    .select(`
+      id,
+      setNumber,
+      weight,
+      reps,
+      isWarmup,
+      exerciseId,
+      workoutId,
+      createdAt,
+      workout:Workout!inner(
+        id,
+        userId,
+        date
+      )
+    `)
+    .in("exerciseId", exerciseIds)
+    .eq("workout.userId", userId)
+    .neq("workoutId", workoutId)
+    .order("createdAt", { ascending: false });
 
-      lastSets = sets ?? [];
+  if (setsError) {
+    console.error("Error obteniendo historial de sets:", setsError);
+    return workout;
+  }
+
+  // 3. Para cada ejercicio buscamos su último workout
+  //
+  // Como historicalSets está ordenado por createdAt DESC,
+  // el primer set que encontremos de cada exerciseId
+  // pertenece a su sesión más reciente.
+  const latestWorkoutByExercise = new Map<string, string>();
+
+  for (const set of historicalSets ?? []) {
+    if (!latestWorkoutByExercise.has(set.exerciseId)) {
+      latestWorkoutByExercise.set(
+        set.exerciseId,
+        set.workoutId,
+      );
+    }
+  }
+
+  // 4. Agrupamos los sets de la última sesión de cada ejercicio
+  const lastSetsByExercise = new Map<string, LastSet[]>();
+
+  for (const set of historicalSets ?? []) {
+    const latestWorkoutId = latestWorkoutByExercise.get(
+      set.exerciseId,
+    );
+
+    if (latestWorkoutId !== set.workoutId) {
+      continue;
     }
 
-  (item.exercise as any).lastSets = lastSets;
+    const lastSet: LastSet = {
+      id: set.id,
+      setNumber: set.setNumber,
+      weight: set.weight,
+      reps: set.reps,
+      isWarmup: set.isWarmup,
+      exerciseId: set.exerciseId,
+      workoutId: set.workoutId,
+    };
 
+    const existing = lastSetsByExercise.get(set.exerciseId);
+
+    if (existing) {
+      existing.push(lastSet);
+    } else {
+      lastSetsByExercise.set(set.exerciseId, [lastSet]);
+    }
+  }
+
+  // 5. Ordenamos las series por número
+  for (const sets of lastSetsByExercise.values()) {
+    sets.sort((a, b) => a.setNumber - b.setNumber);
+  }
+
+  // 6. Agregamos lastSets a cada ejercicio
+  for (const item of exercises) {
+    const exerciseId = item.exercise.id;
+
+    (item.exercise as any).lastSets =
+      lastSetsByExercise.get(exerciseId) ?? [];
   }
 
   return workout;

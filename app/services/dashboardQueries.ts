@@ -49,7 +49,7 @@ export async function getDashboardData(userId: string) {
     // 3. Entrenamientos del mes
     supabase
       .from("Workout")
-      .select("*", { head: true, count: "exact" })
+      .select("id", { head: true, count: "exact" })
       .eq("userId", userId)
       .gte("date", firstDayOfMonth.toISOString()),
 
