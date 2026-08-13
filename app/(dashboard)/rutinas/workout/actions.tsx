@@ -15,7 +15,14 @@ export async function saveWorkoutAction(
 ) {
   const supabase = await createClient();
 
-  await supabase.from("Set").delete().eq("workoutId", workoutId);
+  const { error: deleteError } = await supabase
+    .from("Set")
+    .delete()
+    .eq("workoutId", workoutId);
+
+  if (deleteError) {
+    throw deleteError;
+  }
 
   const rows = exercises.flatMap((exercise) =>
     exercise.sets

@@ -49,7 +49,7 @@ export async function getDashboardData(userId: string) {
     // 3. Entrenamientos del mes
     supabase
       .from("Workout")
-      .select("*", { head: true, count: "exact" })
+      .select("id", { head: true, count: "exact" })
       .eq("userId", userId)
       .gte("date", firstDayOfMonth.toISOString()),
 
@@ -114,14 +114,19 @@ export async function getDashboardData(userId: string) {
 
   if (pinnedExercise?.exerciseId) {
     const { data: bestSet } = await supabase
-      .from("Set")
-      .select("weight, reps")
-      .eq("exerciseId", pinnedExercise.exerciseId)
-      .eq("isWarmup", false)
-      .order("weight", { ascending: false })
-      .order("reps", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  .from("Set")
+  .select(`
+    weight,
+    reps,
+    workout:Workout!inner(userId)
+  `)
+  .eq("exerciseId", pinnedExercise.exerciseId)
+  .eq("isWarmup", false)
+  .eq("workout.userId", userId)
+  .order("weight", { ascending: false })
+  .order("reps", { ascending: false })
+  .limit(1)
+  .maybeSingle();
 
     if (bestSet) {
       const exerciseName = Array.isArray(pinnedExercise.exercise)
