@@ -1,6 +1,21 @@
+import {
+  getMuscleDistribution,
+  getProgressStats,
+} from "@/app/services/progressQueries";
+import { getCurrentUserProfile } from "@/app/services/userQueries";
+import { redirect } from "next/navigation";
 import { FiZap } from "react-icons/fi";
 
-export default function ProgresoPage() {
+export default async function ProgresoPage() {
+  // Llamamos al helper
+  const profile = await getCurrentUserProfile();
+  // Si no hay perfil (no está logueado), rebote automático
+  if (!profile) {
+    redirect("/login");
+  }
+
+  const performance = await getProgressStats(profile.id, 30);
+  const muscleDistribution = await getMuscleDistribution(profile.id, 30);
   return (
     <div className="space-y-10">
       <header>
@@ -14,25 +29,42 @@ export default function ProgresoPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <MetricCard
-          label="Volumen Semanal"
-          value="+12%"
-          subValue="45.200 kg"
-          trend="up"
-        />
-        <MetricCard
-          label="Frecuencia"
-          value="4.2"
-          subValue="Días/Sem"
+          label="Entrenamientos"
+          value={`${performance?.workouts ?? 0}`}
+          subValue="Últimos 30 días"
           trend="neutral"
         />
+
         <MetricCard
-          label="PRs del Mes"
-          value="8"
-          subValue="Nuevas Marcas"
-          trend="up"
+          label="Series Efectivas"
+          value={`${performance?.totalSets ?? 0}`}
+          subValue="Sin calentamientos"
+          trend="neutral"
+        />
+
+        <MetricCard
+          label="Período"
+          value="30"
+          subValue="Días analizados"
+          trend="neutral"
         />
       </div>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+        <h3 className="font-black uppercase italic mb-4">
+          Distribución muscular
+        </h3>
 
+        {muscleDistribution?.map((muscle) => (
+          <div
+            key={muscle.muscleGroup}
+            className="flex justify-between py-2 border-b border-zinc-800"
+          >
+            <span className="capitalize">{muscle.muscleGroup}</span>
+
+            <span className="font-black">{muscle.sets} series</span>
+          </div>
+        ))}
+      </div>
       <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
