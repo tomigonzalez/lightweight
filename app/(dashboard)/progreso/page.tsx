@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import { FiZap } from "react-icons/fi";
 
 export default async function ProgresoPage() {
-  // Llamamos al helper
   const profile = await getCurrentUserProfile();
   // Si no hay perfil (no está logueado), rebote automático
   if (!profile) {
